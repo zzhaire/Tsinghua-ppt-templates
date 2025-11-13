@@ -655,8 +655,8 @@ Awesome Marp v1.3 提供了 6 种列表分列的方式，分别为：
 
 ## 5. 引用、链接和引用盒子
 
-<!-- _class:  bq-green -->
-
+<!-- _class: navbar bq-green  -->
+<!-- _header: \ ***@Awesome Marp*** *关于模板* *封面页* *目录页* *分栏与分列* *引用盒子* *导航栏* **基础知识**-->
 - 自定义样式为：`<!-- _class:  bq-green -->`
 
 > 合成控制法 (Synthetic Control Method) 
