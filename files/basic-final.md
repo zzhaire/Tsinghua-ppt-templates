@@ -17,7 +17,7 @@ math: mathjax
 
 ###### NRDelegationAttack: Complexity DDoS attack on DNS Recursive Resolvers
 Reporter ：田思源 张哲源
-Date ：2025 年 11 月 11 日
+Date ：2025 年 12 月 31 日
 
 ## 目录
 
@@ -26,73 +26,53 @@ Date ：2025 年 11 月 11 日
 <!-- _header: "CONTENTS" -->
 <!-- _paginate: "" -->
 
-- [研究背景](#3)
-- [核心漏洞](#6)
-- [严重性量化](#10)
-- [研究计划](#12)
+- [论文提要](#3)
+- [攻击模型](#6)
+- [实验设计](#10)
+- [实验分析](#12)
 - [讨论与分工](#13)
 
 
-## 1. 研究背景：从“通信”到“复杂度”
+## 1. 论文提要：从“一个补丁”到“另一个补丁”
 
-<!-- _header: \ ***![#l h:40](../images/logo.png)*** **研究背景** *核心漏洞* *严重性量化* *研究计划* *讨论与分工* -->
+<!-- _header: \ ***![#l h:40](../images/logo.png)*** **论文提要** *攻击模型* *实验设计* *实验分析* *讨论与分工* -->
 <!-- _class: navbar cols-2 -->
+
 <div class = "ldiv">
 
-- **DNS 与 DDoS 攻击：** DNS（域名系统）是互联网的关键基础设施，也一直是 DDoS 攻击的主要目标 。
+##### 背景知识
 
-- **传统的 DNS DDoS：**
+**DNS 递归查询 (Recursive Query):**
 
-  - 绝大多数攻击是 **“通信放大”** 攻击 。
-
-  - **目标：** 耗尽**网络带宽**或**数据包处理能力** 。
-
-  - **手段：** 利用一个查询诱使解析器发出`大量`的外部查询包。例如，`NXNSAttack` 就会触发解析器与权威服务器之间的大量消息交换 。
-- 本文提出了一种针对 DNS 解析器的 **“复杂度”攻击** (complexity attack) 。
-</div>
-<div class = "rdiv">
-
-![#c h:300](assets/xieyi-kaiti/image.png)
-<p align="center">图 1 : DNS 解析器工作流程 </p>
-
-> **核心区别：** 这种攻击不以网络流量为目标，而是利用单个恶意查询，迫使解析器陷入高消耗的**内部算法循环**，从而耗尽其**计算资源 (CPU)** 
-
-
-## 1. 研究背景：DNS 解析器
-
-<!-- _header: \ ***![#l h:40](../images/logo.png)*** **研究背景** *核心漏洞* *严重性量化* *研究计划* *讨论与分工* -->
-<!-- _class: navbar cols-2 -->
-
-<div class = " ldiv ">
+- 用户向解析器发起查询，解析器代为完成全部查询过程，直到返回最终 IP 地址。
+- 解析器通过逐级询问（根 → TLD → 权威）和引荐响应（NS 记录）找到目标服务器。
 
 **引荐响应 (Referral Response, RR):**
-
 - 当一个权威服务器（如 `.com` 服务器）无法提供最终答案时，它会“引荐”解析器去问下一个服务器（如 `example.com` 的服务器）。
 
 - 这个响应中包含一个 **NS 名称列表**（Name Server list），告诉解析器“你应该去问谁” 。
 
-**大型引荐响应 (Large Referral Response, LRR):**
 
-- 这是指一个包含**巨量**（例如 $n=1500$）NS 名称的恶意引荐响应。
-- 这是 NXNSAttack 和 NRDelegationAttack 共同的攻击“弹药”。
 
 </div>
-<div class =" rdiv ">
+<div class = "rdiv">
 
 **胶水记录 (Glue Records):**
 
 - "胶水记录" 是指在引荐响应中**附带**的 NS 名称所对应的 **IP 地址**。
-- 它的作用是防止“先有鸡还是先有蛋”的死循环。  
+
+> 本文提出了一种针对 DNS 解析器的 **“复杂度”攻击** (complexity attack) 。
 
 **攻击的关键前提：无胶水记录 (No Glue Records)**
 
-- 攻击者**故意不提供**胶水记录 。
-- 这**迫使**受害解析器必须启动**新的解析流程**，去查找这 1500 个 NS 名称各自的 IP 地址 。
-- 这个“被迫启动新解析”的动作，正是整个攻击链的**起点**。  
-</div>
 
-## 1. 研究背景：DNS 解析器
-<!-- _header: \ ***![#l h:40](../images/logo.png)*** **研究背景** *核心漏洞* *严重性量化* *研究计划* *讨论与分工* -->
+![#c h:200](assets/basic-final/image.png)
+<p class="caption" align="center">图 1: DNS 解析器的工作流程</p>
+
+
+
+## 1. 论文提要：从“一个补丁”到“另一个补丁”
+<!-- _header: \ ***![#l h:40](../images/logo.png)*** **论文提要** *攻击模型* *实验设计* *实验分析* *讨论与分工* -->
 <!-- _class: navbar cols-2-64 bq-green -->
 
 <div class = "rdiv">
@@ -105,7 +85,7 @@ Date ：2025 年 11 月 11 日
 </div>
 <div class ="ldiv">
 
-#### 前代攻击：NXNSAttack (洪水攻击)
+#### 补丁 1：NXNSAttack (洪水攻击)
 
 - **攻击原理：**
   - 攻击利用上一步的 LRR（大型列表、无胶水记录），并让所有 $n$ 个 NS 名称都指向 **“不存在”的 (NXDOMAIN) 域名**。
@@ -114,10 +94,22 @@ Date ：2025 年 11 月 11 日
 - **后果：**
   - 这一个恶意查询，就引发了**海量的对外 DNS 查询**(数据包)
 
-## 2. 核心漏洞: NRDelegationAttack 的利用链（“重启循环”）
-<!-- _header: \ ***![#l h:40](../images/logo.png)*** *研究背景* **核心漏洞** *严重性量化* *研究计划* *讨论与分工* -->
-<!-- _class: navbar -->
 
+
+## 1. 论文提要：从“一个补丁”到“另一个补丁”
+<!-- _header: \ ***![#l h:40](../images/logo.png)*** **论文提要** *攻击模型* *实验设计* *实验分析* *讨论与分工* -->
+<!-- _class: navbar  -->
+#### 补丁 1：NXNSAttack (洪水攻击)
+
+![#c h:400](assets/basic-final/image-1.png)
+
+<p align="center" class="caption">图 2: NXNSAttack 攻击流程</p>
+
+
+## 1. 论文提要：从“一个补丁”到“另一个补丁”
+<!-- _header: \ ***![#l h:40](../images/logo.png)*** **论文提要** *攻击模型* *实验设计* *实验分析* *讨论与分工* -->
+<!-- _class: navbar  -->
+#### 补丁 1 引发的问题：NRDelegationAttack (复杂度攻击)
 
 1. **恶意 LRR 变体：** 攻击者发送一个 LRR（$n=1500$, 无胶水），但 NS 名称指向 **“不响应 DNS 查询” (NR) 的服务器** 。
 2. **触发“重启”：** 解析器按补丁规定，解析前 $k$ 个名称。这 $k$ 个名称被恶意配置为返回 **“委托响应” (Delegation Response)** 。
@@ -126,17 +118,39 @@ Date ：2025 年 11 月 11 日
 5. **耗尽 CPU：** 这个过程迫使解析器**再次执行**高 CPU 消耗的“遍历 $n$ 个名称列表以检查缓存/ADB”的操作 。然后它处理*接下来*的 $k$ 个名称，再次触发重启 。
 6. **结果：** 高 CPU 消耗的核心步骤被循环执行上百次，导致 **CPU 资源**被耗尽。
 
-## 2. 核心漏洞：NRDelegationAttack 的利用链（“重启循环”）
-<!-- _header: \ ***![#l h:40](../images/logo.png)*** *研究背景* **核心漏洞** *严重性量化* *研究计划* *讨论与分工* -->
-<!-- _class: navbar -->
-![#c h:530](assets/xieyi-kaiti/image-1.png)
+## 1. 论文提要：从“一个补丁”到“另一个补丁”
+<!-- _header: \ ***![#l h:40](../images/logo.png)*** **论文提要** *攻击模型* *实验设计* *实验分析* *讨论与分工* -->
+<!-- _class: navbar  -->
+- 补丁 1 引发的问题：NRDelegationAttack (复杂度攻击)
+![#c h:440](assets/xieyi-kaiti/image-1.png)
+<p align="center" class="caption">图 3: 来源 NRDelegationAttack 论文中的攻击流程</p>
 
 
-## 2. 核心漏洞：NRDelegationAttack 的利用链（“重启循环”）
-<!-- _header: \ ***![#l h:40](../images/logo.png)*** *研究背景* **核心漏洞** *严重性量化* *研究计划* *讨论与分工* -->
-<!-- _class: navbar -->
+## 2. 攻击模型：NRDelegationAttack及其变异攻击
+<!-- _header: \ ***![#l h:40](../images/logo.png)*** *研究背景* **攻击模型** *实验设计* *实验分析* *讨论与分工* -->
+<!-- _class: navbar cols-2-73 bq-red -->
 
-![#c h:530](assets/xieyi-kaiti/image-2.png)
+<div class ="ldiv">
+
+![#c h:450](assets/basic-final/image-2.png)
+</div>
+
+<div class ="rdiv">
+
+> 引荐列表处理 (LRR):
+> - 当解析器收到大型引荐响应(LRR)时，需检查缓存/ADB
+> - 每次检查耗时与列表大小(n)呈线性关系：2n次内存查找
+
+> 重启事件 (Restart Event)
+> - 每次收到委托响应会触发重启
+> - 关键缺陷：重启清除`No_Fetch`标志
+> - 导致解析器反复处理整个LRR列表
+</div>
+
+## 2. 攻击模型：NRDelegationAttack及其变异攻击
+<!-- _header: \ ***![#l h:40](../images/logo.png)*** *研究背景* **攻击模型** *实验设计* *实验分析* *讨论与分工* -->
+<!-- _class: navbar cols-2-73 bq-red -->
+
 
 ## 3.严重性量化：从“洪水”到“CPU 放大 5600 倍”
 <!-- _header: \ ***![#l h:40](../images/logo.png)*** *研究背景* *核心漏洞* **严重性量化** *研究计划* *讨论与分工* -->

@@ -17,7 +17,7 @@ math: mathjax
 
 ###### NRDelegationAttack: Complexity DDoS attack on DNS Recursive Resolvers
 Reporter ：叶宇涵 张哲源
-Date ：2025 年 11 月 11 日
+Date ：2025 年 11 月 19 日
 
 ## 目录
 
@@ -235,11 +235,18 @@ Date ：2025 年 11 月 11 日
 
 #### 张哲源:
 
+- 论文分析
+- BIND/NSD 搭建与调试
+- 实验测量 & 数据记录
+- 文稿撰写 & 汇报设计
 </div>
 <div class = "rdiv" >
 
 #### 叶宇涵:
 
+- dnssim 配置
+- 实验测量 & 数据记录
+- 文稿撰写 & 汇报设计
 </div>
 
 
