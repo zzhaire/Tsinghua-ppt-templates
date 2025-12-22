@@ -18,7 +18,7 @@ math: mathjax
 
 ###### NRDelegationAttack: Complexity DDoS attack on DNS Recursive Resolvers
 Reporter ：田思源 张哲源
-Date ：2025 年 12 月 31 日
+Date ：2025 年 12 月 21 日
 
 ## 目录
 
@@ -386,6 +386,30 @@ Date ：2025 年 12 月 31 日
 ![#l  h:250](assets/basic-final/a5fbb32bab402783ed3dc4c1b0dace3b.png)
 
 </div>
+
+## 4.  实验结果分析
+<!-- _header: \ ***![#l h:40](../images/logo.png)*** *研究背景* *攻击模型* *实验设计* **实验分析** *讨论与分工* -->
+<!-- _class: navbar -->
+##### 回顾核心实验发现
+- NRDelegationAttack的惊人放大效应
+- NXNS补丁版：单次攻击消耗1242.4M指令（376倍良性查询），QPS→0
+- 验证了"安全补丁反成攻击催化剂"的悖论现象
+- 双补丁成功将消耗降至8.2M指令（2.3倍），QPS恢复至>10k
+##### 变种攻击的参数敏感性
+CNAME链条攻击： 最优攻击参数：链条长度10 + NRend组合
+NXNS补丁下峰值消耗1142.2M指令（346倍良性）  呈现倒U型非线性关系
+NSLOOP环状攻击：
+- 三阶段演化：nsloop=5时消耗骤升6.8倍 , nsloop=25达峰值1388.0M指令（408倍良性）
+- 双补丁下仍维持154.1M消耗（43倍），防御效果最弱
+
+## 4.  实验结果分析
+<!-- _header: \ ***![#l h:40](../images/logo.png)*** *研究背景* *攻击模型* *实验设计* **实验分析** *讨论与分工* -->
+<!-- _class: navbar -->
+##### 关键收获与启示
+
+- 单一防御的脆弱性：NXNS补丁对NRDelegationAttack放大11倍，印证防御机制需协同设计。
+- 攻击模式设计多样性：攻击者可通过设计CName链条/NSLoop环等新的攻击模式。
+- 范式启示：从攻击-防御-再攻击的螺旋揭示网络安全的动态对抗本质。
 
 ## 5. 讨论与分工
 <!-- _header: \ ***![#l h:40](../images/logo.png)*** *研究背景* *攻击模型* *实验设计* *实验分析* **讨论与分工** -->
