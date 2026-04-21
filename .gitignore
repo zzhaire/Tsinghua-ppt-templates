@@ -1,0 +1,15 @@
+# Ignore everything by default
+/*
+
+# Keep gitignore itself
+!.gitignore
+
+# Only keep these folders tracked
+!Example/
+!Example/**
+!Now/
+!Now/**
+
+# Explicitly ignore Archive (redundant due to /*, but kept for clarity)
+Archive/
+Seminar/

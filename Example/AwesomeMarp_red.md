@@ -1,14 +1,14 @@
 ---
 marp: true
 size: 16:9
-theme: am_blue
+theme: am_red
 paginate: true
 headingDivider: [2,3]
 footer: \ *初虹（虹鹄山庄）* *Awesome Marp：轻松取代 LaTeX Beamer！* *2024年1月13日（v1.3）*
 ---
 
 
-<!-- _class: cover_a 
+<!-- _class: cover_a
 <!-- _header: "" --> 
 <!-- _footer: "" --> 
 <!-- _paginate: "" --> 
