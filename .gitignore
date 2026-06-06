@@ -1,14 +1,30 @@
-# Ignore everything by default
+.DS_Store
+开源软件供应链安全治理.md
 
-# Keep gitignore itself
-!.gitignore
+# Seminar — create locally, not tracked
+Seminar/
 
-# Only keep these folders tracked
-!Example/
-!Example/**
-!Now/
-!Now/**
+# Now — ignore old draft
+Now/searchr1-share.md
 
-# Explicitly ignore Archive (redundant due to /*, but kept for clarity)
-# Archive/
-# Seminar/
+# Archive — only netllm-share kept as example
+Archive/Combinatorial-mathematics.md
+Archive/Email-share.md
+Archive/English_final.md
+Archive/Lumin.md
+Archive/basic-final.md
+Archive/basic-kaiti.md
+Archive/confucius-share.md
+Archive/pollux-share.md
+Archive/searchr1-share.md
+Archive/xieyi-final.md
+Archive/xieyi-kaiti.md
+Archive/demo.mp4
+Archive/assets/Combinatorial-mathematics/
+Archive/assets/English_final/
+Archive/assets/basic-final/
+Archive/assets/confucius-share/
+Archive/assets/pollux-share/
+Archive/assets/searchr1-share/
+Archive/assets/xieyi-final/
+Archive/assets/xieyi-kaiti/
