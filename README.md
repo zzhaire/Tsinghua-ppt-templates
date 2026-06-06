@@ -1,5 +1,9 @@
 # Tsinghua PPT Templates
 
+> 告别 PowerPoint 手工排版 — 用 Markdown 写内容，AI 帮你生成完整 PPT，5 分钟出片。
+
+配合 [Claude Code](https://claude.ai/code) 输入 `/ppt`，描述你的主题和章节，AI 自动生成带导航栏、分栏、封面的完整 `.md` 文件，VS Code + Marp 插件即时预览，一键导出 PDF。
+
 基于 [Awesome Marp](https://github.com/favourhong/Awesome-Marp) 定制的清华风格演示文稿模板，感谢原作者 [@favourhong](https://github.com/favourhong) 的出色工作。
 
 ---
@@ -10,6 +14,7 @@
 
 | 特性 | 说明 |
 |------|------|
+| AI 一键生成 | `/ppt` 指令 + 主题描述，完整 PPT 自动生成 |
 | 主题色 | 蓝、绿、红、暗色、棕、紫 共 6 种 |
 | 自定义样式 | 38 种（分栏、封面、目录、Callout 等） |
 | 导航进度栏 | navbar 样式，支持多节高亮 |
